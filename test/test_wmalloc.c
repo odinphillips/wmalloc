@@ -1,10 +1,12 @@
 #include <stdio.h>
+#include "wmalloc.h"
 #include "CuTest.h"
 
 /*****************************************************************************/
 
 void TestWMallocZero(CuTest *tc) {
-    CuAssertTrue(tc, 1==1);
+    void *ptr = wmalloc(4096);
+    CuAssertTrue(tc, ptr == NULL);
 }
 
 CuSuite* WMallocGetSuite() {
