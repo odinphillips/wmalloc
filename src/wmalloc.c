@@ -47,19 +47,21 @@ void wfree(void *ptr) {
  * return Page size in bytes.
  */
 int wmalloc_page_size(void) {
+    if (!wmalloc_page_size_) {
+        wmalloc_page_size_ = getpagesize();
+    }
     return wmalloc_page_size_;
 }
 
 /**
- * Check memory buffer address is page aligned.
- * 
- * This function should be called after wmalloc to chek the address returned
- * is correctly aligned (e.g. 4096).
+ * Check memory buffer address is page aligned. Typically 4096.
  * 
  * @param  ptr Pointer to wmalloc'ed memory address.
  * @return     1 if memory is aligned, otherwise 0.
  */
 int vmalloc_is_aligned(void *ptr) {
-    int page_size = (wmalloc_page_size_ ? wmalloc_page_size_ : 4096);
-    return (((uint64_t)ptr % page_size) ? 0 : 1);
+    if (!wmalloc_page_size_) {
+        wmalloc_page_size_ = getpagesize();
+    }
+    return (((uint64_t)ptr % wmalloc_page_size_) ? 0 : 1);
 }
