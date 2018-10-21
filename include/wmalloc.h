@@ -11,3 +11,4 @@ void wfree(void *ptr);
 
 /* Utility functions */
 int wmalloc_page_size(void);
+int vmalloc_is_aligned(void *ptr);

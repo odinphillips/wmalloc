@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <inttypes.h>
 #include <unistd.h>
 
 #include "CuTest.h"
@@ -16,9 +17,31 @@ void TestWFreeNull(CuTest *tc) {
     wfree(NULL);
 }
 
-void TestWMalloc4K(CuTest *tc) {
-    void *ptr = wmalloc(4096);
+void TestWMalloc1Byte(CuTest *tc) {
+    void *ptr = wmalloc(1);
     CuAssertPtrNotNull(tc, ptr);
+    CuAssertTrue(tc, vmalloc_is_aligned(ptr));
+    wfree(ptr);
+}
+
+void TestWMalloc4K(CuTest *tc) {
+    void *ptr = wmalloc(4 * 1024);
+    CuAssertPtrNotNull(tc, ptr);
+    CuAssertTrue(tc, vmalloc_is_aligned(ptr));
+    wfree(ptr);
+}
+
+void TestWMalloc256K(CuTest *tc) {
+    void *ptr = wmalloc(256 * 1024);
+    CuAssertPtrNotNull(tc, ptr);
+    CuAssertTrue(tc, vmalloc_is_aligned(ptr));
+    wfree(ptr);
+}
+
+void TestWMalloc128M(CuTest *tc) {
+    void *ptr = wmalloc(128 * 1024 * 1024);
+    CuAssertPtrNotNull(tc, ptr);
+    CuAssertTrue(tc, vmalloc_is_aligned(ptr));
     wfree(ptr);
 }
 
@@ -26,7 +49,10 @@ CuSuite* WMallocGetSuite() {
     CuSuite* suite = CuSuiteNew();
     SUITE_ADD_TEST(suite, TestWMallocZero);
     SUITE_ADD_TEST(suite, TestWFreeNull);
+    SUITE_ADD_TEST(suite, TestWMalloc1Byte);
     SUITE_ADD_TEST(suite, TestWMalloc4K);
+    SUITE_ADD_TEST(suite, TestWMalloc256K);
+    SUITE_ADD_TEST(suite, TestWMalloc128M);
     return suite;
 }
 
