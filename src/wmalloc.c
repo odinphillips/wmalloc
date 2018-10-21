@@ -25,7 +25,11 @@ void *wmalloc(size_t size) {
     if (size == 0) {
         return NULL;
     }
-    return valloc(size);
+
+    void *ptr = NULL;
+    int ret = posix_memalign(&ptr, (size_t)wmalloc_page_size_, size);
+    
+    return (ret ? NULL : ptr);
 }
 
 /**
